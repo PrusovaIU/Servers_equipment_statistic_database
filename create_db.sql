@@ -70,7 +70,7 @@ CREATE SCHEMA IF NOT EXISTS sockets;
 
 CREATE TABLE IF NOT EXISTS sockets.info
 (
-	id integer PRIMARY KEY NOT NULL,
+	id SERIAL PRIMARY KEY,
 	server_id integer REFERENCES servers.info (id),
 	name text NOT NULL,
 	host varchar(15) NOT NULL,
@@ -78,4 +78,27 @@ CREATE TABLE IF NOT EXISTS sockets.info
 	type text NOT NULL
 );
 
+CREATE TABLE IF NOT EXISTS sockets.statistic
+(
+	id serial PRIMARY KEY,
+	socket_id integer REFERENCES sockets.info (id),
+	time time NOT NULL,
+	status text NOT NULL,
+	direction boolean NOT NULL,
+	bytes_per_sec integer CHECK (bytes_per_sec >= 0),
+	packet_per_sec integer CHECK (packet_per_sec >= 0),
+	crashed_packet_per_sec integer CHECK (crashed_packet_per_sec >= 0),
+	bytes_total integer CHECK (bytes_total >= 0),
+	packets_total integer CHECK (packets_total >= 0),
+	crashed_packet_total integer CHECK (crashed_packet_total >= 0)
+);
 
+CREATE TABLE IF NOT EXISTS sockets.alarm
+(
+	id serial PRIMARY KEY,
+	socket_id integer REFERENCES sockets.info (id),
+	time time NOT NULL,
+	name text NOT NULL,
+	type text NOT NULL,
+	message text
+);
