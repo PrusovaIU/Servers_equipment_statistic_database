@@ -1,8 +1,10 @@
 CREATE ROLE ses_source LOGIN;
+CREATE ROLE ses_reader LOGIN;
 
 CREATE SCHEMA IF NOT EXISTS servers;
 
 GRANT CREATE, USAGE ON SCHEMA servers TO ses_source;
+GRANT USAGE ON SCHEMA servers TO ses_reader;
 
 CREATE TABLE IF NOT EXISTS servers.info
 (
@@ -25,6 +27,7 @@ CREATE TABLE IF NOT EXISTS servers.statistic
 CREATE SCHEMA IF NOT EXISTS tasks;
 
 GRANT CREATE, USAGE ON SCHEMA tasks TO ses_source;
+GRANT USAGE ON SCHEMA tasks TO ses_reader;
 
 CREATE TABLE IF NOT EXISTS tasks.update_info
 (
@@ -48,6 +51,9 @@ CREATE TABLE IF NOT EXISTS tasks.statistic
 
 CREATE SCHEMA IF NOT EXISTS modules;
 
+GRANT CREATE, USAGE ON SCHEMA modules TO ses_source;
+GRANT USAGE ON SCHEMA modules TO ses_reader;
+
 CREATE TABLE IF NOT EXISTS modules.info
 (
 	id SERIAL PRIMARY KEY,
@@ -67,6 +73,9 @@ CREATE TABLE IF NOT EXISTS modules.statistic
 );
 
 CREATE SCHEMA IF NOT EXISTS sockets;
+
+GRANT CREATE, USAGE ON SCHEMA sockets TO ses_source;
+GRANT USAGE ON SCHEMA sockets TO ses_reader;
 
 CREATE TABLE IF NOT EXISTS sockets.info
 (
