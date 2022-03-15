@@ -107,5 +107,54 @@ INSERT INTO sockets.alarm (socket_id, time, name, type, message) VALUES
     (5, '2022-03-14 10:57:04', 'Warning', 'local alarm', 'Text of warning');
 COMMIT;
 
+-- Find all sockets warnings
 
+SELECT * FROM sockets.alarm WHERE name ILIKE '%warning%';
 
+-- Find all sockets, which doesn't work correctly
+
+SELECT DISTINCT socket_id FROM sockets.statistic 
+    WHERE STATUS NOT LIKE 'work' AND time = (SELECT MAX(time) FROM sockets.statistic);
+
+-- Find all sockets error
+
+SELECT * FROM sockets.alarm WHERE name SIMILAR TO '%(E|e)rror%';
+
+-- Output data about sockets with host, port and type
+
+SELECT sockets.info.id, sockets.info.name, servers.info.host, sockets.info.port, sockets.info.type 
+    FROM sockets.info
+    LEFT JOIN servers.info ON sockets.info.server_id = servers.info.id;
+	
+-- Output data about modules, which has not worked
+
+SELECT modules.info.id, modules.info.server_id, modules.info.position, modules.statistic.time, modules.statistic.message
+    FROM modules.info
+    INNER JOIN modules.statistic ON modules.info.id = modules.statistic.module_id
+    WHERE modules.statistic.status = 0;
+
+-- Update servers tasks name in accoding with using type of modules
+	
+UPDATE servers.info
+SET task = (SELECT string_agg(DISTINCT type, ', ')
+    FROM modules.info AS info
+    WHERE info.server_id = servers.info.id);
+COMMIT;
+	
+-- Delete data about servers, which doesn't have any modules
+
+DELETE FROM servers.info
+    WHERE id NOT IN (SELECT DISTINCT server_id FROM modules.info) 
+RETURNING *;
+COMMIT;
+
+-- Delete statistic from all modules, which works on server with ID 1
+
+DELETE FROM modules.statistic_del USING modules.info
+    WHERE module_id = modules.info.id and modules.info.server_id = 1
+RETURNING *;
+COMMIT;
+
+-- Copy data to file
+
+COPY (SELECT * FROM modules.statistic WHERE time > '2022-03-14 10:57:03') TO '~/statistic.copy';
