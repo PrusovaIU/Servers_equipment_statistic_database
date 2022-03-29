@@ -1,11 +1,11 @@
-from db.config import Servers
+from db.config import Base
 from sqlalchemy import Column
 from sqlalchemy import Integer
 from sqlalchemy import TEXT
 from sqlalchemy import VARCHAR
 
 
-class ServersInfo(Servers):
+class ServersInfo(Base):
     __tablename__ = "info"
     __table_args__ = {'schema': 'servers'}
 

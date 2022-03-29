@@ -1,12 +1,13 @@
+from db.dals.dal_meta import DAL
 from db.models.servers_info import ServersInfo
-from sqlalchemy.future import select
-from sqlalchemy.orm import Session
-from typing import List
+from sqlalchemy.orm import DeclarativeMeta
+from typing import Type
 
 
-class ServersInfoDAL:
-    def __init__(self, db_session: Session):
-        self.db_session = db_session
+class ServersInfoDAL(DAL):
+    @property
+    def _table(self) -> Type[DeclarativeMeta]:
+        return ServersInfo
 
     async def add_server(self, server_id: int, task_name: str, host: str):
         new_server = ServersInfo(
@@ -14,11 +15,4 @@ class ServersInfoDAL:
             task=task_name,
             host=host
         )
-        self.db_session.add(new_server)
-        await self.db_session.flush()
-
-    async def get_all_servers(self) -> List[ServersInfo]:
-        query = await self.db_session.execute(
-            select(ServersInfo)
-        )
-        return query.scalars().all()
+        await self._add(new_server)
