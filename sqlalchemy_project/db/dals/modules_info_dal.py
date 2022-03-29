@@ -12,7 +12,7 @@ class ModulesInfoDAL(DAL):
         return ModulesInfo
 
     async def add_module(self, server_id: int, position: int, module_type: str):
-        if self.get_module(server_id, position) is None:
+        if await self.get_module(server_id, position) is None:
             new_module = ModulesInfo(
                 server_id=server_id,
                 position=position,
@@ -23,7 +23,7 @@ class ModulesInfoDAL(DAL):
             raise HTTPException(status_code=HTTPStatus.CONFLICT,
                                 detail=f"There is module on server {server_id} in position {position}")
 
-    async def get_module(self, server_id: int, position: int):
+    async def get_module(self, server_id: int, position: int) -> str:
         query = await self.db_session.execute(
             select(self._table)
             .where(self._table.server_id == server_id)
