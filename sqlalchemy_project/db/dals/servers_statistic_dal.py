@@ -1,8 +1,5 @@
 from db.dals.dal_meta import DAL
 from db.models.servers_statistic import ServersStatistic
-from fastapi import HTTPException
-from http import HTTPStatus
-from sqlalchemy.future import select
 from typing import Type, Optional
 
 
