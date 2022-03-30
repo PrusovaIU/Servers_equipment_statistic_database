@@ -2,7 +2,6 @@ from db.dals.dal_meta import DAL
 from db.models.servers_info import ServersInfo
 from fastapi import HTTPException
 from http import HTTPStatus
-from sqlalchemy.exc import IntegrityError
 from sqlalchemy.future import select
 from typing import Type
 
@@ -25,7 +24,7 @@ class ServersInfoDAL(DAL):
                                 detail=f"Server with ID = {server_id} is already exists")
 
     async def get_server(self, server_id) -> str:
-        query = await self.db_session.execute(
+        query = await self._db_session.execute(
             select(self._table)
             .where(self._table.server_id == server_id)
         )

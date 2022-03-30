@@ -25,6 +25,12 @@ async def get_host_sockets(server_id: int, port: int):
         return await dal.get_socket(server_id, port)
 
 
+@sockets_router.get("/socket/id")
+async def get_socket_id(server_id: int, port: int):
+    async with get_dal(SocketsInfoDAL) as dal:
+        return await dal.get_socket_id(server_id, port)
+
+
 @sockets_router.get("/hosts/{host}")
 async def get_host_sockets(host: str):
     async with get_dal(SocketsInfoDAL) as dal:

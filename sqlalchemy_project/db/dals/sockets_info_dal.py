@@ -26,7 +26,7 @@ class SocketsInfoDAL(DAL):
                                 detail=f"There is socket on server {server_id} on port {port}")
 
     async def get_host_sockets(self, host: str):
-        query = await self.db_session.execute(
+        query = await self._db_session.execute(
             select(self._table)
             .join(ServersInfo, ServersInfo.server_id == self._table.server_id)
             .where(ServersInfo.host == host)
@@ -34,22 +34,29 @@ class SocketsInfoDAL(DAL):
         return query.all()
 
     async def get_server_sockets(self, server_id: int):
-        query = await self.db_session.execute(
+        query = await self._db_session.execute(
             select(self._table)
             .where(self._table.server_id == server_id)
         )
         return query.all()
 
     async def get_socket(self, server_id: int, port: int):
-        query = await self.db_session.execute(
+        query = await self._db_session.execute(
             select(self._table)
             .where(self._table.server_id == server_id)
             .where(self._table.port == port)
         )
         return query.first()
 
+    async def get_socket_id(self, server_id: int, port: int) -> int:
+        statement = select(self._table.socket_id)\
+            .where(self._table.server_id == server_id)\
+            .where(self._table.port == port)
+        return await self._get_id(statement,
+                                  f"Socket on server {server_id} on port {port} has not been registered")
+
     async def get_sockets_by_type(self, socket_type: str):
-        query = await self.db_session.execute(
+        query = await self._db_session.execute(
             select(self._table)
             .where(self._table.socket_type == socket_type)
         )

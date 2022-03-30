@@ -23,10 +23,17 @@ class ModulesInfoDAL(DAL):
             raise HTTPException(status_code=HTTPStatus.CONFLICT,
                                 detail=f"There is module on server {server_id} in position {position}")
 
-    async def get_module(self, server_id: int, position: int) -> str:
-        query = await self.db_session.execute(
+    async def get_module(self, server_id: int, position: int):
+        query = await self._db_session.execute(
             select(self._table)
             .where(self._table.server_id == server_id)
             .where(self._table.position == position)
         )
         return query.first()
+
+    async def get_module_id(self, server_id: int, position: int) -> int:
+        statement = select(self._table.module_id)\
+            .where(self._table.server_id == server_id)\
+            .where(self._table.position == position)
+        return await self._get_id(statement,
+                                  f"Module on server {server_id} in position {position} has not been registered")

@@ -20,7 +20,13 @@ async def get_all_modules() -> List[ModulesInfo]:
     return await get_all(ModulesInfoDAL)
 
 
-@modules_router.get("/{server_id}/{position}")
+@modules_router.get("/module")
 async def get_module(server_id: int, position: int):
     async with get_dal(ModulesInfoDAL) as dal:
         return await dal.get_module(server_id, position)
+
+
+@modules_router.get("/module/id")
+async def get_module(server_id: int, position: int):
+    async with get_dal(ModulesInfoDAL) as dal:
+        return await dal.get_module_id(server_id, position)
