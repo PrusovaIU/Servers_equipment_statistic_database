@@ -14,7 +14,7 @@ class ServersStatisticDAL(DAL):
             server_id=server_id,
             workload_percentage=workload_percentage,
             temperature=temperature,
-            RAM_used=ram_used,
+            ram_used=ram_used,
             disk_used=disk_used
         )
         return await self._add(new_data)

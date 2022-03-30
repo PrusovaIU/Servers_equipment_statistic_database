@@ -1,3 +1,4 @@
+from .tasks_update_info_dal import TasksUpdateInfoDAL
 from db.dals.dal_meta import DAL
 from db.models.servers_info import ServersInfo
 from fastapi import HTTPException
@@ -11,7 +12,7 @@ class ServersInfoDAL(DAL):
     def _table(self) -> Type[ServersInfo]:
         return ServersInfo
 
-    async def add_server(self, server_id: int, task_name: str, host: str):
+    async def add_server(self, server_id: int, task_name: str, host: str, task_configuration: dict):
         if await self.get_server(server_id) is None:
             new_server = ServersInfo(
                 server_id=server_id,
@@ -19,6 +20,8 @@ class ServersInfoDAL(DAL):
                 host=host
             )
             await self._add(new_server)
+            task_update_dal = TasksUpdateInfoDAL(self._db_session)
+            await task_update_dal.add_info(server_id, task_configuration)
         else:
             raise HTTPException(status_code=HTTPStatus.BAD_REQUEST,
                                 detail=f"Server with ID = {server_id} is already exists")

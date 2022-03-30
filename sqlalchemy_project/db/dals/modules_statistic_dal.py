@@ -9,7 +9,7 @@ class ModulesStatisticDAL(DAL):
     def _table(self) -> Type[ModulesStatistic]:
         return ModulesStatistic
 
-    async def add_module(self, server_id: int, position: int, status: int, message: Optional[str], data: dict):
+    async def add(self, server_id: int, position: int, status: int, message: Optional[str], data: dict):
         module_id = await ModulesInfoDAL(self._db_session).get_module_id(server_id, position)
         new_data = ModulesStatistic(
             module_id=module_id,
