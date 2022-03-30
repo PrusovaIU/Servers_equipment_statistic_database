@@ -1,16 +1,18 @@
-from db.dals.dal_meta import DAL
+from datetime import datetime
+from db.dals.statistic_dal_meta import StatisticDAL
 from db.models.tasks_statistic import TasksStatistic
-from typing import Type
+from typing import Type, Optional
 
 
-class TasksStatisticDAL(DAL):
+class TasksStatisticDAL(StatisticDAL):
     @property
     def _table(self) -> Type[TasksStatistic]:
         return TasksStatistic
 
     async def add(self, server_id: int, speed_in: int, speed_out: int,
-                  total_in: int, total_out: int, total_dropped: int):
-        new_info = TasksStatistic(
+                  total_in: int, total_out: int, total_dropped: int, time: Optional[datetime] = None):
+        await self._add_statistic(
+            time,
             server_id=server_id,
             speed_in=speed_in,
             speed_out=speed_out,
@@ -18,4 +20,3 @@ class TasksStatisticDAL(DAL):
             total_out=total_out,
             total_dropped=total_dropped
         )
-        await self._add(new_info)

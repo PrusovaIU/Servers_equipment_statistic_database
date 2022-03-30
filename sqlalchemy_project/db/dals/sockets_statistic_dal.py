@@ -1,19 +1,22 @@
 from .sockets_info_dal import SocketsInfoDAL
-from db.dals.dal_meta import DAL
+from datetime import datetime
+from db.dals.statistic_dal_meta import StatisticDAL
 from db.models.sockets_statistic import SocketsStatistic
-from typing import Type
+from typing import Type, Optional
 
 
-class SocketsStatisticDAL(DAL):
+class SocketsStatisticDAL(StatisticDAL):
     @property
     def _table(self) -> Type[SocketsStatistic]:
         return SocketsStatistic
 
     async def add(self, server_id: int, port: int, status: str, direction: bool,
                   bytes_per_sec: int, packets_per_sec: int, crashed_packets_per_sec: int,
-                  bytes_total: int, packets_total: int, crashed_packets_total: int):
+                  bytes_total: int, packets_total: int, crashed_packets_total: int,
+                  time: Optional[datetime] = None):
         socket_id = await SocketsInfoDAL(self._db_session).get_socket_id(server_id, port)
-        new_data = SocketsStatistic(
+        await self._add_statistic(
+            time,
             socket_id=socket_id,
             status=status,
             direction=direction,
@@ -24,4 +27,3 @@ class SocketsStatisticDAL(DAL):
             packets_total=packets_total,
             crashed_packets_total=crashed_packets_total
         )
-        await self._add(new_data)

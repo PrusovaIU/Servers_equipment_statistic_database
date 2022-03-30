@@ -1,3 +1,4 @@
+from datetime import datetime, timedelta
 from db.dals.modules_info_dal import ModulesInfoDAL, ModulesInfo
 from db.dals.modules_statistic_dal import ModulesStatisticDAL
 from db.dals.servers_info_dal import ServersInfoDAL
@@ -66,19 +67,22 @@ class RandomDataGenerator:
         servers_statistic_dal = ServersStatisticDAL(self.__db_session)
         servers_temperatures = [uniform(0, 100) for _ in range(len(self.__modules_amount))]
         servers_disc = [randint(1048576, 13421772800) for _ in range(len(self.__modules_amount))]
-        for i in range(10):
+        time = datetime.utcnow()
+        for i in range(12):
             for server_id in range(len(self.__modules_amount)):
                 await servers_statistic_dal.add(
                     server_id,
                     servers_temperatures[server_id],
                     choice([None, uniform(-10, 50)]),
                     randint(1048576, 1048576000),
-                    servers_disc[server_id]
+                    servers_disc[server_id],
+                    time
                 )
                 servers_temperatures[server_id] += uniform(-5, 5)
                 servers_disc[server_id] += randint(-134217728, 134217728)
                 await self.__add_modules_statistic(server_id)
                 await self.__add_sockets_statistic(server_id)
+            time += timedelta(minutes=5)
 
     async def __add_modules_statistic(self, server_id: int):
         modules_statistic_dal = ModulesStatisticDAL(self.__db_session)
