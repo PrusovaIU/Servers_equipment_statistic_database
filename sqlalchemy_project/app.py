@@ -3,12 +3,13 @@ from db.config import Base
 from fastapi import FastAPI
 from routers.modules import modules_router
 from routers.servers import servers_router
+from routers.sockets import sockets_router
 from routers.tasks import tasks_router
 import uvicorn
 
 
 app = FastAPI()
-for router in [modules_router, tasks_router, servers_router]:
+for router in [modules_router, tasks_router, servers_router, sockets_router]:
     app.include_router(router)
 
 
