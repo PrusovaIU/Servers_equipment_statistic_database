@@ -5,7 +5,7 @@ from sqlalchemy import CheckConstraint
 from sqlalchemy import Column
 from sqlalchemy import DateTime
 from sqlalchemy import ForeignKey
-from sqlalchemy import Integer
+from sqlalchemy import Integer, BigInteger
 
 
 class TasksStatistic(Base):
@@ -19,8 +19,8 @@ class TasksStatistic(Base):
                                   f".{ServersInfo.__tablename__}"
                                   f".{ServersInfo.server_id.name}"),
                        nullable=False)
-    speed_in = Column(Integer, CheckConstraint("speed_in >= 0"))
-    speed_out = Column(Integer, CheckConstraint("speed_out >= 0"))
-    total_in = Column(Integer, CheckConstraint("total >= 0"))
-    total_out = Column(Integer, CheckConstraint("total_out >= 0"))
-    total_dropped = Column(Integer, CheckConstraint("total_dropped >= 0"))
+    speed_in = Column(BigInteger, CheckConstraint("speed_in >= 0"))
+    speed_out = Column(BigInteger, CheckConstraint("speed_out >= 0"))
+    total_in = Column(BigInteger, CheckConstraint("total_in >= 0"))
+    total_out = Column(BigInteger, CheckConstraint("total_out >= 0"))
+    total_dropped = Column(BigInteger, CheckConstraint("total_dropped >= 0"))

@@ -1,21 +1,22 @@
-from db.dals.dal_meta import DAL
+from datetime import datetime
+from db.dals.statistic_dal_meta import StatisticDAL
 from db.models.servers_info import ServersInfo
 from db.models.tasks_update_info import TasksUpdateInfo
 from sqlalchemy.future import select
-from typing import Type
+from typing import Type, Optional
 
 
-class TasksUpdateInfoDAL(DAL):
+class TasksUpdateInfoDAL(StatisticDAL):
     @property
     def _table(self) -> Type[TasksUpdateInfo]:
         return TasksUpdateInfo
 
-    async def add_info(self, server_id: int, task_configuration: dict):
-        new_info = TasksUpdateInfo(
+    async def add_info(self, server_id: int, task_configuration: dict, time: Optional[datetime] = None):
+        await self._add_statistic(
+            time,
             server_id=server_id,
             task_configuration=task_configuration
         )
-        await self._add(new_info)
 
     async def get_history(self, server_id: int):
         query = await self._db_session.execute(
