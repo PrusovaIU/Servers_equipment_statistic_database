@@ -170,7 +170,7 @@ class RandomDataGenerator:
 
     async def add_tasks_updates(self, hours_interval: float):
         time = datetime.utcnow()
-        finish_time = time + timedelta(hours=hours_interval)
+        finish_time = time + timedelta(hours=hours_interval) - timedelta(minutes=10)
         min_amount = int(hours_interval*3) if hours_interval >= 1 else 3
         max_amount = int(hours_interval*10) if hours_interval >= 1 else 10
         records_amount = {server_id: randint(min_amount, max_amount)
