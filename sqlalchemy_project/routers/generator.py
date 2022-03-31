@@ -16,7 +16,7 @@ from random import randint, choice, uniform, choices
 from typing import Dict, List
 
 
-api_router = APIRouter()
+generator_router = APIRouter(prefix="/generator")
 
 
 class RandomDataGenerator:
@@ -71,31 +71,35 @@ class RandomDataGenerator:
                 )
             self.__sockets.append(sockets)
 
-    async def add_statistic(self):
+    async def add_statistic(self, hours_interval: float, write_sec_interval: int):
+        time = datetime.utcnow()
+        finish_time = time + timedelta(hours=hours_interval)
+        while time <= finish_time:
+            await self.__add_servers_statistic(time)
+            time += timedelta(seconds=write_sec_interval)
+
+    async def __add_servers_statistic(self, time: datetime):
         servers_statistic_dal = ServersStatisticDAL(self.__db_session)
         servers_temperatures = [uniform(0, 100) for _ in range(len(self.__modules_amount))]
         servers_disc = [randint(1048576, 13421772800) for _ in range(len(self.__modules_amount))]
-        time = datetime.utcnow()
-        for i in range(12):
-            for server_id in range(len(self.__modules_amount)):
-                await servers_statistic_dal.add(
-                    server_id,
-                    servers_temperatures[server_id],
-                    choice([None, uniform(-10, 50)]),
-                    randint(1048576, 1048576000),
-                    servers_disc[server_id],
-                    time
-                )
-                servers_temperatures[server_id] += uniform(-5, 5)
-                if servers_temperatures[server_id] < 0:
-                    servers_temperatures[server_id] = 0
-                servers_disc[server_id] += randint(-134217728, 134217728)
-                if servers_disc[server_id] < 0:
-                    servers_disc[server_id] = 0
-                await self.__add_modules_statistic(server_id, time)
-                await self.__add_sockets_statistic(server_id, time)
-                await self.__add_tasks_statistic(server_id, time)
-            time += timedelta(minutes=5)
+        for server_id in range(len(self.__modules_amount)):
+            await servers_statistic_dal.add(
+                server_id,
+                servers_temperatures[server_id],
+                choice([None, uniform(-10, 50)]),
+                randint(1048576, 1048576000),
+                servers_disc[server_id],
+                time
+            )
+            servers_temperatures[server_id] += uniform(-5, 5)
+            if servers_temperatures[server_id] < 0:
+                servers_temperatures[server_id] = 0
+            servers_disc[server_id] += randint(-134217728, 134217728)
+            if servers_disc[server_id] < 0:
+                servers_disc[server_id] = 0
+            await self.__add_modules_statistic(server_id, time)
+            await self.__add_sockets_statistic(server_id, time)
+            await self.__add_tasks_statistic(server_id, time)
 
     async def __add_modules_statistic(self, server_id: int, time: datetime):
         modules_statistic_dal = ModulesStatisticDAL(self.__db_session)
@@ -164,10 +168,13 @@ class RandomDataGenerator:
                 time
             )
 
-    async def add_tasks_updates(self):
+    async def add_tasks_updates(self, hours_interval: float):
         time = datetime.utcnow()
-        finish_time = time + timedelta(minutes=50)
-        records_amount = {server_id: randint(3, 10) for server_id in range(len(self.__modules_amount))}
+        finish_time = time + timedelta(hours=hours_interval)
+        min_amount = int(hours_interval*3) if hours_interval >= 1 else 3
+        max_amount = int(hours_interval*10) if hours_interval >= 1 else 10
+        records_amount = {server_id: randint(min_amount, max_amount)
+                          for server_id in range(len(self.__modules_amount))}
         task_update_dal = TasksUpdateInfoDAL(self.__db_session)
         time_delta = (finish_time-time)/sum(records_amount.values())
         for i in range(max(records_amount.values())):
@@ -181,10 +188,10 @@ class RandomDataGenerator:
                     )
 
 
-@api_router.post("/generate_random_data", status_code=HTTPStatus.CREATED)
-async def generate_random_data():
+@generator_router.post("/generate_random_data", status_code=HTTPStatus.CREATED)
+async def generate_random_data(hours_interval: float, write_sec_interval: int):
     async with get_session() as session:
         generator = RandomDataGenerator(session)
         await generator.create_info()
-        await generator.add_statistic()
-        await generator.add_tasks_updates()
+        await generator.add_statistic(hours_interval, write_sec_interval)
+        await generator.add_tasks_updates(hours_interval)
