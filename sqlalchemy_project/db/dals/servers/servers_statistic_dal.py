@@ -1,6 +1,6 @@
 from datetime import datetime
-from db.dals.statistic_dal_meta import StatisticDAL
-from db.models.servers_statistic import ServersStatistic
+from db.dals.META.statistic_dal_meta import StatisticDAL
+from db.models.servers.servers_statistic import ServersStatistic
 from typing import Type, Optional
 
 

@@ -1,4 +1,4 @@
-from db.dals.servers_info_dal import ServersInfoDAL, ServersInfo
+from db.dals.servers.servers_info_dal import ServersInfoDAL, ServersInfo
 from fastapi import APIRouter
 from fastapi import HTTPException
 from http import HTTPStatus

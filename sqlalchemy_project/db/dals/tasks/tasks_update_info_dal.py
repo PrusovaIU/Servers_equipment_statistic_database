@@ -1,7 +1,7 @@
 from datetime import datetime
-from db.dals.statistic_dal_meta import StatisticDAL
-from db.models.servers_info import ServersInfo
-from db.models.tasks_update_info import TasksUpdateInfo
+from db.dals.META.statistic_dal_meta import StatisticDAL
+from db.models.servers.servers_info import ServersInfo
+from db.models.tasks.tasks_update_info import TasksUpdateInfo
 from sqlalchemy.future import select
 from typing import Type, Optional
 

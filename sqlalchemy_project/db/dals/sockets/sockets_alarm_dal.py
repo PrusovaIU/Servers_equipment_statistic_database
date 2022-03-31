@@ -1,7 +1,7 @@
-from .sockets_info_dal import SocketsInfoDAL
+from db.dals.sockets.sockets_info_dal import SocketsInfoDAL
 from datetime import datetime
-from db.dals.statistic_dal_meta import StatisticDAL
-from db.models.sockets_alarm import SocketsAlarm
+from db.dals.META.statistic_dal_meta import StatisticDAL
+from db.models.sockets.sockets_alarm import SocketsAlarm
 from typing import Type, Optional
 
 

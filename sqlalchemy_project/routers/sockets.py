@@ -1,6 +1,5 @@
-from db.dals.sockets_info_dal import SocketsInfoDAL
-from fastapi import APIRouter, HTTPException
-from json import loads, JSONDecodeError
+from db.dals.sockets.sockets_info_dal import SocketsInfoDAL
+from fastapi import APIRouter
 from http import HTTPStatus
 from initers import get_dal, get_all
 

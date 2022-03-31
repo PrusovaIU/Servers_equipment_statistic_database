@@ -1,4 +1,4 @@
-from db.dals.tasks_update_info_dal import TasksUpdateInfoDAL
+from db.dals.tasks.tasks_update_info_dal import TasksUpdateInfoDAL
 from fastapi import APIRouter, HTTPException
 from json import loads, JSONDecodeError
 from http import HTTPStatus

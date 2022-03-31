@@ -1,5 +1,5 @@
-from .servers_info import ServersInfo
 from datetime import datetime
+from db.models.servers.servers_info import ServersInfo
 from db.config import Base
 from sqlalchemy import CheckConstraint
 from sqlalchemy import Column

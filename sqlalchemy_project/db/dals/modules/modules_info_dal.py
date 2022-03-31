@@ -1,5 +1,5 @@
-from db.dals.dal_meta import DAL
-from db.models.modules_info import ModulesInfo
+from db.dals.META.dal_meta import DAL
+from db.models.modules.modules_info import ModulesInfo
 from fastapi import HTTPException
 from http import HTTPStatus
 from sqlalchemy.future import select

@@ -1,4 +1,4 @@
-from .dal_meta import DAL
+from db.dals.META.dal_meta import DAL
 from abc import ABCMeta
 from datetime import datetime
 from typing import Optional

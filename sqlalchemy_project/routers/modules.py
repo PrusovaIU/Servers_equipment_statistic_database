@@ -1,4 +1,4 @@
-from db.dals.modules_info_dal import ModulesInfoDAL, ModulesInfo
+from db.dals.modules.modules_info_dal import ModulesInfoDAL, ModulesInfo
 from fastapi import APIRouter
 from http import HTTPStatus
 from initers import get_all, get_dal, get_session

@@ -1,6 +1,6 @@
 from datetime import datetime
-from db.dals.statistic_dal_meta import StatisticDAL
-from db.models.tasks_statistic import TasksStatistic
+from db.dals.META.statistic_dal_meta import StatisticDAL
+from db.models.tasks.tasks_statistic import TasksStatistic
 from typing import Type, Optional
 
 

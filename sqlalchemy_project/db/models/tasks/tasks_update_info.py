@@ -1,6 +1,6 @@
-from .servers_info import ServersInfo
 from datetime import datetime
 from db.config import Base
+from db.models.servers.servers_info import ServersInfo
 from sqlalchemy import Column
 from sqlalchemy import DateTime
 from sqlalchemy import ForeignKey

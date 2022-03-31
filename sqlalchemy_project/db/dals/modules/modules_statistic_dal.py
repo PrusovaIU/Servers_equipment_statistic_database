@@ -1,7 +1,7 @@
 from .modules_info_dal import ModulesInfoDAL
 from datetime import datetime
-from db.dals.statistic_dal_meta import StatisticDAL
-from db.models.modules_statistic import ModulesStatistic
+from db.dals.META.statistic_dal_meta import StatisticDAL
+from db.models.modules.modules_statistic import ModulesStatistic
 from typing import Type, Optional
 
 

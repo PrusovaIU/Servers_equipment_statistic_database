@@ -1,6 +1,6 @@
 from contextlib import asynccontextmanager
 from db.config import async_session
-from db.dals.dal_meta import DAL
+from db.dals.META.dal_meta import DAL
 from typing import Type
 
 
