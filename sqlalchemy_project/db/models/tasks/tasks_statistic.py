@@ -1,3 +1,5 @@
+from .__schema_name import SCHEMA
+from ..meta_table import MetaTable
 from datetime import datetime
 from db.models.servers.servers_info import ServersInfo
 from db.config import Base
@@ -8,15 +10,17 @@ from sqlalchemy import ForeignKey
 from sqlalchemy import Integer, BigInteger
 
 
-class TasksStatistic(Base):
+class TasksStatistic(Base, MetaTable):
     __tablename__ = "statistic"
-    __table_args__ = {'schema': 'tasks'}
+    _schema = SCHEMA
+    __table_args__ = {
+        "schema": _schema
+    }
 
     record_id = Column(Integer, primary_key=True, autoincrement=True)
     time = Column(DateTime, default=datetime.utcnow)
     server_id = Column(Integer,
-                       ForeignKey(f"{ServersInfo.__table_args__['schema']}"
-                                  f".{ServersInfo.__tablename__}"
+                       ForeignKey(f"{ServersInfo.get_full_name()}"
                                   f".{ServersInfo.server_id.name}"),
                        nullable=False)
     speed_in = Column(BigInteger, CheckConstraint("speed_in >= 0"))

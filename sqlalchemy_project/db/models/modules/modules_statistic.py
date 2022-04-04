@@ -1,3 +1,5 @@
+from .__schema_name import SCHEMA
+from ..meta_table import MetaTable
 from .modules_info import ModulesInfo
 from datetime import datetime
 from db.config import Base
@@ -9,15 +11,17 @@ from sqlalchemy import Integer
 from sqlalchemy import TEXT
 
 
-class ModulesStatistic(Base):
+class ModulesStatistic(Base, MetaTable):
     __tablename__ = "statistic"
-    __table_args__ = {'schema': 'modules'}
+    _schema = SCHEMA
+    __table_args__ = {
+        "schema": _schema
+    }
 
     record_id = Column(Integer, primary_key=True, autoincrement=True)
     time = Column(DateTime, default=datetime.utcnow)
     module_id = Column(Integer,
-                       ForeignKey(f"{ModulesInfo.__table_args__['schema']}"
-                                  f".{ModulesInfo.__tablename__}"
+                       ForeignKey(f"{ModulesInfo.get_full_name()}"
                                   f".{ModulesInfo.module_id.name}"))
     status = Column(Integer, nullable=False)
     message = Column(TEXT)

@@ -1,4 +1,6 @@
+from .__schema_name import SCHEMA
 from .sockets_info import SocketsInfo
+from ..meta_table import MetaTable
 from datetime import datetime
 from db.config import Base
 from sqlalchemy import BOOLEAN
@@ -10,14 +12,16 @@ from sqlalchemy import Integer, BigInteger
 from sqlalchemy import TEXT
 
 
-class SocketsStatistic(Base):
+class SocketsStatistic(Base, MetaTable):
     __tablename__ = "statistic"
-    __table_args__ = {"schema": "sockets"}
+    _schema = SCHEMA
+    __table_args__ = {
+        "schema": _schema
+    }
 
     record_id = Column(Integer, primary_key=True, autoincrement=True)
     socket_id = Column(Integer,
-                       ForeignKey(f"{SocketsInfo.__table_args__['schema']}"
-                                  f".{SocketsInfo.__tablename__}"
+                       ForeignKey(f"{SocketsInfo.get_full_name()}"
                                   f".{SocketsInfo.socket_id.name}"),
                        nullable=False)
     time = Column(DateTime, default=datetime.utcnow)

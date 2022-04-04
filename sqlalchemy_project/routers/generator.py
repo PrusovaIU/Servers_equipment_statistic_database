@@ -77,6 +77,7 @@ class RandomDataGenerator:
         while time <= finish_time:
             await self.__add_servers_statistic(time)
             time += timedelta(seconds=write_sec_interval)
+            await self.__db_session.flush()
 
     async def __add_servers_statistic(self, time: datetime):
         servers_statistic_dal = ServersStatisticDAL(self.__db_session)
