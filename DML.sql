@@ -35,12 +35,12 @@ COMMIT;
 
 ---- servers statistic
 
-INSERT INTO servers.statistic (time, server_id, workload_percentage, temperature, RAM_used, disk_used) VALUES
+INSERT INTO servers.statistic (time, server_id, workload_percentage, temperature, ram_used, disk_used) VALUES
 	('2022-03-14 10:57:01', 0, 65.4, 23.1, 45567345, 945530968),
 	('2022-03-14 10:57:01', 1, 43.9, 25.5, 85743658, 473847364);
 COMMIT;
 
-INSERT INTO servers.statistic (time, server_id, workload_percentage, temperature, RAM_used, disk_used) VALUES
+INSERT INTO servers.statistic (time, server_id, workload_percentage, temperature, ram_used, disk_used) VALUES
 	('2022-03-14 10:57:04', 0, 65.7, 23.2, 45597497, 945530968),
 	('2022-03-14 10:57:04', 1, 47.3, 23.2, 85743645, 473847345);
 COMMIT;
