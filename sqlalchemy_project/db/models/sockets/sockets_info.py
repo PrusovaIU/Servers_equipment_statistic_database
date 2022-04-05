@@ -8,11 +8,13 @@ from sqlalchemy import ForeignKey
 from sqlalchemy import Index
 from sqlalchemy import Integer
 from sqlalchemy import TEXT
+from sqlalchemy.sql import func
 
 
 class SocketsInfo(Base, MetaTable):
     __tablename__ = "info"
     _schema = SCHEMA
+    __ix_name = f"ix_{_schema}_{__tablename__}"
 
     socket_id = Column(Integer, primary_key=True, autoincrement=True)
     server_id = Column(
@@ -27,6 +29,11 @@ class SocketsInfo(Base, MetaTable):
     socket_type = Column(TEXT, nullable=False)
 
     __table_args__ = (
-        Index("server_id_port_idx", server_id, port, unique=True),
+        Index(f"{__ix_name}_server_id_port", server_id, port, unique=True),
+        Index(
+            f"{__ix_name}_socket_type",
+            func.to_tsvector('english', socket_type),
+            postgresql_using='gin'
+        ),
         {"schema": _schema}
     )

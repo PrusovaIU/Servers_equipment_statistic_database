@@ -19,8 +19,11 @@ class TasksUpdateInfo(Base, MetaTable):
 
     record_id = Column(Integer, primary_key=True, autoincrement=True)
     time = Column(DateTime, default=datetime.utcnow)
-    server_id = Column(Integer,
-                       ForeignKey(f"{ServersInfo.get_full_name()}"
-                                  f".{ServersInfo.server_id.name}"),
-                       nullable=False)
+    server_id = Column(
+        Integer,
+        ForeignKey(f"{ServersInfo.get_full_name()}"
+                   f".{ServersInfo.server_id.name}"),
+        nullable=False,
+        index=True
+    )
     task_configuration = Column(JSON, nullable=False)
