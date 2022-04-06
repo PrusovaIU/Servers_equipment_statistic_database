@@ -7,11 +7,12 @@ from sqlalchemy import Column
 from sqlalchemy import DateTime
 from sqlalchemy import ForeignKey
 from sqlalchemy import Integer
+from sqlalchemy import REAL
 from sqlalchemy import TEXT
 
 
-class ModulesStatistic(Base, MetaTable):
-    __tablename__ = "statistic"
+class ModulesParametersStatistic(Base, MetaTable):
+    __tablename__ = "parameters_statistic"
     _schema = SCHEMA
     __table_args__ = {
         "schema": _schema
@@ -22,5 +23,6 @@ class ModulesStatistic(Base, MetaTable):
     module_id = Column(Integer,
                        ForeignKey(f"{ModulesInfo.get_full_name()}"
                                   f".{ModulesInfo.module_id.name}"))
-    status = Column(Integer, nullable=False)
-    message = Column(TEXT)
+    parameter_name = Column(TEXT, nullable=False)
+    parent_parameter = Column(TEXT)
+    value = Column(REAL)

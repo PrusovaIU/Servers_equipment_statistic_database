@@ -20,6 +20,8 @@ generator_router = APIRouter(prefix="/generator")
 
 
 class RandomDataGenerator:
+    __MODULES_TYPES = ['A', 'B', 'C', 'D', 'E', 'F']
+
     def __init__(self, db_session):
         self.__db_session = db_session
         self.__logger = getLogger("Random data generator logger")
@@ -32,7 +34,7 @@ class RandomDataGenerator:
         }
         self.__module_types: Dict[str, List[str]] = {
             type_name: self.__generate_config_params(f"{type_name}_module", params_amount)
-            for type_name, params_amount in zip(['A', 'B', 'C', 'D', 'E', 'F'], [9, 17, 7, 4, 15, 4])
+            for type_name, params_amount in zip(self.__MODULES_TYPES, [9, 17, 7, 4, 15, 4])
         }
 
     @staticmethod
@@ -121,6 +123,13 @@ class RandomDataGenerator:
                 for module_info in module_info_rows:
                     module_type = module_info.module_type
                     data = {param_name: randint(-1000, 5000) for param_name in self.__module_types[module_type]}
+                    if module_type in self.__MODULES_TYPES[-2]:
+                        for i in range(randint(1, 3)):
+                            data[f"{module_type}_params_s_{i}"] = {
+                                f"s_{j}": {
+                                    f"{k}": randint(-5000, 5000) for k in range(randint(1, 5))
+                                } for j in range(randint(1, 5))
+                            }
             await modules_statistic_dal.add(server_id, module_position, status, message, data, time)
 
     async def __add_tasks_statistic(self, server_id: int, time: datetime):
