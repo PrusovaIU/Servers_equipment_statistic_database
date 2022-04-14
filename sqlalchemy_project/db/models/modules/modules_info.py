@@ -24,7 +24,7 @@ class ModulesInfo(Base, MetaTable):
         nullable=False,
         index=True
     )
-    position = Column(Integer, CheckConstraint("position>=0"), nullable=False)
+    position = Column(Integer, nullable=False)
     module_type = Column(TEXT, nullable=False)
 
     __table_args__ = (
@@ -34,5 +34,6 @@ class ModulesInfo(Base, MetaTable):
             func.to_tsvector('english', module_type),
             postgresql_using='gin'
         ),
+        CheckConstraint(position >= 0),
         {"schema": _schema}
     )
